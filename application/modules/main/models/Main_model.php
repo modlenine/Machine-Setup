@@ -1465,28 +1465,61 @@ class Main_model extends CI_Model
             $mainFormno = $this->input->post("rMainFormno");
             // Save Submain frist
 
+            // if($this->input->post("returnCheckShift") == 0){
+                
+            //     $submainFormno = getSubFormNo();
+            //     $arSaveSubmain = array(
+            //         "fasub_formno" => $submainFormno,
+            //         "fasub_main_formno" => $this->input->post("rMainFormno"),
+            //         "fasub_worktime" => $this->input->post("fasub_worktime"),
+            //         "fasub_machinename" => $this->input->post("rMachineTemp"),
+            //         "fasub_op_username" => getUser()->Fname . " " . getUser()->Lname,
+            //         "fasub_op_ecode" => getUser()->ecode,
+            //         "fasub_op_deptcode" => getUser()->DeptCode,
+            //         "fasub_op_datetime" => date("Y-m-d H:i:s")
+            //     );
+            //     $this->db->insert("farrel_submain", $arSaveSubmain);
+            // }else{
+
+            //     if(getSubmainDataForInsert($mainFormno)->row()->fasub_worktime != $this->input->post("fasub_worktime")){
+            //         $submainFormno = getSubFormNo();
+            //         $arSaveSubmain = array(
+            //             "fasub_formno" => $submainFormno,
+            //             "fasub_main_formno" => $this->input->post("rMainFormno"),
+            //             "fasub_worktime" => $this->input->post("fasub_worktime"),
+            //             "fasub_machinename" => $this->input->post("rMachineTemp"),
+            //             "fasub_op_username" => getUser()->Fname . " " . getUser()->Lname,
+            //             "fasub_op_ecode" => getUser()->ecode,
+            //             "fasub_op_deptcode" => getUser()->DeptCode,
+            //             "fasub_op_datetime" => date("Y-m-d H:i:s")
+            //         );
+            //     $this->db->insert("farrel_submain", $arSaveSubmain);
+            //     }else{
+            //         $submainFormno = getSubmainDataForInsert($mainFormno)->row()->fasub_formno;
+            //     }
+            // }
+
+
             $getDetailFormNo = getDetailFormNo();
             $rRunscreenName = $this->input->post("sRunscreenName");
+            $fileInput1 = "fd_files1";
+            $fileInput2 = "fd_files2";
+            $fileInput3 = "fd_files3";
+            $fileInput4 = "fd_files4";
+            $fileInput5 = "fd_files5";
 
-            // $fileInput1 = "fd_files1";
-            // $fileInput2 = "fd_files2";
-            // $fileInput3 = "fd_files3";
-            // $fileInput4 = "fd_files4";
-            // $fileInput5 = "fd_files5";
+            $fileTypeName1 = "อัพโหลดไฟล์รูปหน้าจอ";
+            $fileTypeName2 = "อัพโหลดไฟล์รูปเม็ด MB.";
+            $fileTypeName3 = "อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน";
+            $fileTypeName4 = "อัพโหลดไฟล์อื่นๆ";
+            $fileTypeName5 = "อัพโหลดไฟล์วิดิโอ";
 
-            // $fileTypeName1 = "อัพโหลดไฟล์รูปหน้าจอ";
-            // $fileTypeName2 = "อัพโหลดไฟล์รูปเม็ด MB.";
-            // $fileTypeName3 = "อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน";
-            // $fileTypeName4 = "อัพโหลดไฟล์อื่นๆ";
-            // $fileTypeName5 = "อัพโหลดไฟล์วิดิโอ";
-
-            // uploadImage($fileInput1 , $getDetailFormNo , $fileTypeName1 , $mainFormno);
-            // uploadImage($fileInput2 , $getDetailFormNo , $fileTypeName2 , $mainFormno);
-            // uploadImage($fileInput3 , $getDetailFormNo , $fileTypeName3 , $mainFormno);
-            // uploadImage($fileInput4 , $getDetailFormNo , $fileTypeName4 , $mainFormno);
-            // uploadVideo($fileInput5 , $getDetailFormNo , $fileTypeName5 , $mainFormno);
-
-            // Update video
+            uploadImage($fileInput1 , $getDetailFormNo , $fileTypeName1 , $mainFormno);
+            uploadImage($fileInput2 , $getDetailFormNo , $fileTypeName2 , $mainFormno);
+            uploadImage($fileInput3 , $getDetailFormNo , $fileTypeName3 , $mainFormno);
+            uploadImage($fileInput4 , $getDetailFormNo , $fileTypeName4 , $mainFormno);
+            uploadVideo($fileInput5 , $getDetailFormNo , $fileTypeName5 , $mainFormno);
+        // Update video
 
             // Save Memo to Memo table
             $arMemoDetail = array(
@@ -1507,7 +1540,7 @@ class Main_model extends CI_Model
 
                 $arSaveSpoint = array(
                     "far_detail_formno" => $getDetailFormNo,
-                    "far_main_formno" => $mainFormno,
+                    "far_main_formno" => $this->input->post("rMainFormno"),
                     // "far_sub_formno" => $submainFormno,
                     "far_worktime" => $this->input->post("rChooseTime"),
                     "far_action" => "run",
@@ -1522,64 +1555,11 @@ class Main_model extends CI_Model
                     "far_datetime" => date("Y-m-d H:i:s")
                 );
                 $this->db->insert("farrel_detail", $arSaveSpoint);
-            }
-
-            //Copy File And Data File
-            $ecode = getUser()->ecode;
-
-            $sqlfiletemp = $this->db->query("SELECT
-            msd_files_temp.file_autoid,
-            msd_files_temp.file_detail_formno,
-            msd_files_temp.file_main_formno,
-            msd_files_temp.file_name,
-            msd_files_temp.file_type,
-            msd_files_temp.file_userpost,
-            msd_files_temp.file_ecodepost,
-            msd_files_temp.file_deptcodepost,
-            msd_files_temp.file_datetime
-            FROM
-            msd_files_temp
-            WHERE file_main_formno = ? AND file_ecodepost = ?
-            ", array($mainFormno , $ecode));
-
-            $sourcePathFile = "upload/images_temp/";
-            $destinationPathFile = "upload/images/";
-            foreach($sqlfiletemp->result() as $rs){
-                $arsavedata = array(
-                    "file_detail_formno" => $getDetailFormNo,
-                    "file_main_formno" => $mainFormno,
-                    "file_name" => $rs->file_name,
-                    "file_type" => $rs->file_type,
-                    "file_userpost" => $rs->file_userpost,
-                    "file_ecodepost" => $rs->file_ecodepost,
-                    "file_deptcodepost" => $rs->file_deptcodepost,
-                    "file_datetime" => date("Y-m-d H:i:s")
+                $output = array(
+                    "msg" => "บันทึก Run/Point เรียบร้อยแล้ว",
+                    "status" => "Insert success"
                 );
-                $this->db->insert("msd_files" , $arsavedata);
-
-                $sourceFile = $sourcePathFile . $rs->file_name;
-                $destinationFile = $destinationPathFile . $rs->file_name;
-
-                if (file_exists($sourceFile)) {
-                    rename($sourceFile, $destinationFile);
-                }
             }
-
-            //delete data from table temp
-            $this->db->where("file_main_formno" , $mainFormno);
-            $this->db->where("file_ecodepost" , $ecode);
-            $this->db->delete("msd_files_temp");
-
-            $output = array(
-                "msg" => "บันทึก Run/Point เรียบร้อยแล้ว",
-                "status" => "Insert success"
-            );
-
-        }else{
-            $output = array(
-                "msg" => "บันทึก Run/Point ไม่สำเร็จ",
-                "status" => "Insert Not success"
-            );
         }
         echo json_encode($output);
     }
@@ -1677,23 +1657,23 @@ class Main_model extends CI_Model
             $eDetailFormno = $this->input->post("eDetailFormno");
             $mainFormno = $this->input->post("eMainFormno");
 
-            // $fileInput1 = "fd_files1";
-            // $fileInput2 = "fd_files2";
-            // $fileInput3 = "fd_files3";
-            // $fileInput4 = "fd_files4";
-            // $fileInput5 = "fd_files5";
+            $fileInput1 = "fd_files1";
+            $fileInput2 = "fd_files2";
+            $fileInput3 = "fd_files3";
+            $fileInput4 = "fd_files4";
+            $fileInput5 = "fd_files5";
 
-            // $fileTypeName1 = "อัพโหลดไฟล์รูปหน้าจอ";
-            // $fileTypeName2 = "อัพโหลดไฟล์รูปเม็ด MB.";
-            // $fileTypeName3 = "อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน";
-            // $fileTypeName4 = "อัพโหลดไฟล์อื่นๆ";
-            // $fileTypeName5 = "อัพโหลดไฟล์วิดิโอ";
+            $fileTypeName1 = "อัพโหลดไฟล์รูปหน้าจอ";
+            $fileTypeName2 = "อัพโหลดไฟล์รูปเม็ด MB.";
+            $fileTypeName3 = "อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน";
+            $fileTypeName4 = "อัพโหลดไฟล์อื่นๆ";
+            $fileTypeName5 = "อัพโหลดไฟล์วิดิโอ";
 
-            // uploadImage($fileInput1 , $eDetailFormno , $fileTypeName1 , $mainFormno);
-            // uploadImage($fileInput2 , $eDetailFormno , $fileTypeName2 , $mainFormno);
-            // uploadImage($fileInput3 , $eDetailFormno , $fileTypeName3 , $mainFormno);
-            // uploadImage($fileInput4 , $eDetailFormno , $fileTypeName4 , $mainFormno);
-            // uploadVideo($fileInput5 , $eDetailFormno , $fileTypeName5 , $mainFormno);
+            uploadImage($fileInput1 , $eDetailFormno , $fileTypeName1 , $mainFormno);
+            uploadImage($fileInput2 , $eDetailFormno , $fileTypeName2 , $mainFormno);
+            uploadImage($fileInput3 , $eDetailFormno , $fileTypeName3 , $mainFormno);
+            uploadImage($fileInput4 , $eDetailFormno , $fileTypeName4 , $mainFormno);
+            uploadVideo($fileInput5 , $eDetailFormno , $fileTypeName5 , $mainFormno);
 
             // Update video
 
@@ -1722,55 +1702,6 @@ class Main_model extends CI_Model
             $this->db->where("fd_refformno", $this->input->post("eDetailFormno"));
             $this->db->where("fd_refmainformno", $this->input->post("eMainFormno"));
             $this->db->update("msd_memo", $arSaveMemo);
-
-
-            //Copy File And Data File
-            $ecode = getUser()->ecode;
-
-            $sqlfiletemp = $this->db->query("SELECT
-            msd_files_temp.file_autoid,
-            msd_files_temp.file_detail_formno,
-            msd_files_temp.file_main_formno,
-            msd_files_temp.file_name,
-            msd_files_temp.file_type,
-            msd_files_temp.file_userpost,
-            msd_files_temp.file_ecodepost,
-            msd_files_temp.file_deptcodepost,
-            msd_files_temp.file_datetime
-            FROM
-            msd_files_temp
-            WHERE file_main_formno = ? AND file_detail_formno = ? AND file_ecodepost = ?
-            ", array($mainFormno , $eDetailFormno , $ecode));
-
-            $sourcePathFile = "upload/images_temp/";
-            $destinationPathFile = "upload/images/";
-            foreach($sqlfiletemp->result() as $rs){
-                $arsavedata = array(
-                    "file_detail_formno" => $eDetailFormno,
-                    "file_main_formno" => $mainFormno,
-                    "file_name" => $rs->file_name,
-                    "file_type" => $rs->file_type,
-                    "file_userpost" => $rs->file_userpost,
-                    "file_ecodepost" => $rs->file_ecodepost,
-                    "file_deptcodepost" => $rs->file_deptcodepost,
-                    "file_datetime" => date("Y-m-d H:i:s")
-                );
-                $this->db->insert("msd_files" , $arsavedata);
-
-                $sourceFile = $sourcePathFile . $rs->file_name;
-                $destinationFile = $destinationPathFile . $rs->file_name;
-
-                if (file_exists($sourceFile)) {
-                    rename($sourceFile, $destinationFile);
-                }
-            }
-
-            //delete data from table temp
-            $this->db->where("file_main_formno" , $mainFormno);
-            $this->db->where("file_detail_formno" , $eDetailFormno);
-            $this->db->where("file_ecodepost" , $ecode);
-            $this->db->delete("msd_files_temp");
-            //Copy File And Data File
 
 
             $output = array(
@@ -1854,24 +1785,6 @@ class Main_model extends CI_Model
             //     $this->db->where("fasub_formno", $subFormno);
             //     $this->db->delete("farrel_submain");
             // }
-            $ecode = getUser()->ecode;
-            $folderPath = "upload/images_temp/";
-            $sqlDelfiletemp = $this->db->query("SELECT
-            file_name
-            FROM msd_files_temp WHERE file_main_formno = ? AND file_detail_formno = ? AND file_ecodepost = ?
-            " , array($mainFormno, $delDetailFormno , $ecode));
-
-            if (is_dir($folderPath))
-            {
-                foreach ($sqlDelfiletemp->result() as $rs) {
-                    $file = $folderPath.basename($rs->file_name);
-                    if(unlink($file)){
-                        $this->db->where("file_name" , $rs->file_name);
-                        $this->db->delete("msd_files_temp");
-                    }
-                }
-            }
-
 
             $output = array(
                 "msg" => "ลบข้อมูลสำเร็จ",
@@ -4342,100 +4255,6 @@ class Main_model extends CI_Model
         echo json_encode($output);
 
 
-    }
-
-    public function del_filetemp()
-    {
-        if(!empty($this->input->post("formno"))){
-            $formno = $this->input->post("formno");
-            $ecode = getUser()->ecode;
-            $folderPath = "upload/images_temp/";
-            $sql = $this->db->query("SELECT
-            file_name
-            FROM msd_files_temp WHERE file_main_formno = ? AND file_ecodepost = ?
-            " , array($formno , $ecode));
-
-            $output = [];
-            if (is_dir($folderPath))
-            {
-                foreach ($sql->result() as $rs) {
-                    $file = $folderPath.basename($rs->file_name);
-                    $output[] = $file;
-                    if(unlink($file)){
-                        $this->db->where("file_name" , $rs->file_name);
-                        $this->db->delete("msd_files_temp");
-                    }
-                }
-
-
-                $output = array(
-                    "status" => "success",
-                    "msg" => "ลบไฟล์สำเร็จ",
-                    "result" => $output,
-                    "query" => $sql->result()
-                );
-            }else{
-                $output = array(
-                    "status" => "error",
-                    "msg" => "ไม่พบ Folder Path"
-                );
-            }
-        }else{
-            $output = array(
-                "status" => "error",
-                "msg" => "พบความผิดพลาดของการส่งข้อมูล"
-            );
-        }
-
-        echo json_encode($output);
-    }
-
-    public function del_filetemp_edit()
-    {
-        if(!empty($this->input->post("mainformno")) && !empty($this->input->post("detailformno"))){
-            $mainformno = $this->input->post("mainformno");
-            $detailformno = $this->input->post("detailformno");
-
-            $ecode = getUser()->ecode;
-            $folderPath = "upload/images_temp/";
-            $sql = $this->db->query("SELECT
-            file_name
-            FROM msd_files_temp WHERE file_main_formno = ? AND file_detail_formno = ? AND file_ecodepost = ?
-            " , array($mainformno, $detailformno , $ecode));
-
-            $output = [];
-            if (is_dir($folderPath))
-            {
-                foreach ($sql->result() as $rs) {
-                    $file = $folderPath.basename($rs->file_name);
-                    $output[] = $file;
-                    if(unlink($file)){
-                        $this->db->where("file_name" , $rs->file_name);
-                        $this->db->delete("msd_files_temp");
-                    }
-                }
-
-
-                $output = array(
-                    "status" => "success",
-                    "msg" => "ลบไฟล์สำเร็จ",
-                    "result" => $output,
-                    "query" => $sql->result()
-                );
-            }else{
-                $output = array(
-                    "status" => "error",
-                    "msg" => "ไม่พบ Folder Path"
-                );
-            }
-        }else{
-            $output = array(
-                "status" => "error",
-                "msg" => "พบความผิดพลาดของการส่งข้อมูล"
-            );
-        }
-
-        echo json_encode($output);
     }
 
 

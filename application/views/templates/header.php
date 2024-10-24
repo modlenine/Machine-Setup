@@ -56,9 +56,6 @@
 	<link rel="stylesheet" href="<?=base_url()?>assets/ekko_lightbox/ekko-lightbox.css" type="text/css"/>
 
 	<!-- <link rel="stylesheet" href="<?=base_url()?>assets/ekko_lightbox/ekko-lightbox.css" type="text/css"/> -->
-	<script src="<?=base_url()?>assets/js/custom/axios.min.js"></script>
-	<script src="<?=base_url()?>assets/dropzone/dropzone.min.js"></script>
-	<link href="<?=base_url()?>assets/dropzone/dropzone.min.css" rel="stylesheet" type="text/css" />
 	
 			
 	

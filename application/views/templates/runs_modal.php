@@ -1,12 +1,12 @@
 <!-- Modal รายการหลัก -->
 
-<div class="modal fade " id="runs_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade " id="runs_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <!-- <h5 class="modal-title" id="exampleModalLabel">บันทึก การ Run เครื่อง <span id="show_runs_modal_title"></span></h5><br> -->
                 <span id="showMainDetailOnRunModal"></span>
-                <button type="button" class="close closeAddRun" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -48,27 +48,21 @@
                             <textarea name="fd_memo" id="fd_memo" cols="30" rows="3" class="form-control"></textarea>
                         </div>
                     </div>
-
-
                     <div class="col-lg-12 bottommargin">
                         <label>อัพโหลดไฟล์รูปหน้าจอ</label><br>
-                        <div id="fd_files1" class="dropzone"></div>
-                        <!-- <input id="fd_files1" name="fd_files1[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*"> -->
+                        <input id="fd_files1" name="fd_files1[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                     </div>
                     <div class="col-lg-12 bottommargin">
                         <label>อัพโหลดไฟล์รูปเม็ด MB.</label><br>
-                        <div id="fd_files2" class="dropzone"></div>
-                        <!-- <input id="fd_files2" name="fd_files2[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*"> -->
+                        <input id="fd_files2" name="fd_files2[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                     </div>
                     <div class="col-lg-12 bottommargin">
                         <label>อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน</label><br>
-                        <div id="fd_files3" class="dropzone"></div>
-                        <!-- <input id="fd_files3" name="fd_files3[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*"> -->
+                        <input id="fd_files3" name="fd_files3[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                     </div>
                     <div class="col-lg-12 bottommargin">
                         <label>อัพโหลดไฟล์อื่นๆ</label><br>
-                        <div id="fd_files4" class="dropzone"></div>
-                        <!-- <input id="fd_files4" name="fd_files4[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*"> -->
+                        <input id="fd_files4" name="fd_files4[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                     </div>
 
                     <!-- //Update video -->
@@ -82,7 +76,6 @@
                     <div class="" id="showTemplateRun"></div>
                     <div class="row">
                         <input hidden type="text" name="rMainFormno" id="rMainFormno">
-                        <input hidden type="text" name="rDetailFormno" id="rDetailFormno">
                         <input hidden type="text" name="rSubFormno" id="rSubFormno">
                         <input hidden type="text" name="rMachineTemp" id="rMachineTemp">
                         <input hidden type="text" name="checkMdShift" id="checkMdShift">
@@ -124,7 +117,7 @@
             <div class="modal-header">
                 <!-- <h5 class="modal-title" id="exampleModalLabel">แก้ไขบันทึก การ Run เครื่อง <span id="showTemplateTextEdit"></span></h5> -->
                 <span id="showMainDetailOnEditRunModal"></span>
-                <button type="button" class="close editrunclose CloseEditRun" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close editrunclose" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -161,22 +154,54 @@
                             <div id="alertChooseTime"></div> -->
                         </div>
 
-                        <div class="row form-group">
-                            <div class="col-lg-12 bottommargin">
+                        <div class="row mb-3" style="border:solid 1px #17a2b8;padding:20px;">
+                            <div class="col-lg-12 bottommargin fileSection1" style="display:none;">
                                 <label>อัพโหลดไฟล์รูปหน้าจอ</label><br>
-                                <div id="fd_files1_edit" class="dropzone"></div>
+                                <input id="fd_files1" name="fd_files1[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                             </div>
-                            <div class="col-lg-12 bottommargin">
+                            <div class="col-md-12 form-group">
+                                <button type="button" class="btn btn-info btn-block fileup1">อัพโหลดไฟล์รูปหน้าจอ
+                                    <i class="icon-cloud-upload fileup" style="float:right;color:aliceblue;"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3" style="border:solid 1px #ccc;padding:20px;">
+                            <div class="col-lg-12 bottommargin fileSection2" style="display:none;">
                                 <label>อัพโหลดไฟล์รูปเม็ด MB.</label><br>
-                                <div id="fd_files2_edit" class="dropzone"></div>
+                                <input id="fd_files2" name="fd_files2[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                             </div>
-                            <div class="col-lg-12 bottommargin">
+                            <div class="col-md-12 form-group">
+                                <button type="button" class="btn btn-secondary btn-block fileup2">อัพโหลดไฟล์รูปเม็ด MB.
+                                    <i class="icon-cloud-upload fileup" style="float:right;color:aliceblue;"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3" style="border:solid 1px #17a2b8;padding:20px;">
+                            <div class="col-lg-12 bottommargin fileSection3" style="display:none;">
                                 <label>อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน</label><br>
-                                <div id="fd_files3_edit" class="dropzone"></div>
+                                <input id="fd_files3" name="fd_files3[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
                             </div>
-                            <div class="col-lg-12 bottommargin">
+                            <div class="col-md-12 form-group">
+                                <button type="button" class="btn btn-info btn-block fileup3">อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน
+                                    <i class="icon-cloud-upload fileup" style="float:right;color:aliceblue;"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3" style="border:solid 1px #ccc;padding:20px;">
+                            <div class="col-lg-12 bottommargin fileSection4" style="display:none;">
                                 <label>อัพโหลดไฟล์อื่นๆ</label><br>
-                                <div id="fd_files4_edit" class="dropzone"></div>
+                                <input id="fd_files4" name="fd_files4[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-show-preview="true" accept="image/*">
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <button type="button" class="btn btn-secondary btn-block fileup4">อัพโหลดไฟล์อื่นๆ
+                                    <i class="icon-cloud-upload fileup" style="float:right;color:aliceblue;"></i>
+                                </button>
                             </div>
                         </div>
 

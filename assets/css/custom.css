@@ -1446,15 +1446,3 @@ span.cFeederCheck{
 	top:10px;
 	right:5px;
 }
-
-
-#file-input {
-	display: none;
-}
-.custom-dropzone {
-	border: 2px dashed #0087F7;
-	padding: 50px;
-	width: 100%;
-	text-align: center;
-	cursor: pointer;
-}

@@ -2678,54 +2678,6 @@ function loadQcSampling(batchnumber , productnumber , productcode , dataareaid) 
   });
 }
 
-function loadDetailFormno()
-{
-  axios.get(baseurl+'main/getDetailFormno').then(res=>{
-    console.log(res.data);
-    let result = res.data.result;
-    $('#rDetailFormno').val(result);
-  });
-}
-
-function deleteFileTemp(formno)
-{
-  const formdata = new FormData();
-  formdata.append('formno' , formno);
-  axios.post(baseurl+'main/del_filetemp' , formdata ,{
-      headers:{
-          'Content-Type':'multipart/form-data'
-      }
-  }).then(res=>{
-      console.log(res.data);
-      if(res.data.status == "success"){
-        myDropzone1.removeAllFiles();
-        myDropzone2.removeAllFiles();
-        myDropzone3.removeAllFiles();
-        myDropzone4.removeAllFiles();
-      }
-  });
-}
-
-function deleteFileTemp_edit(mainformno , detailformno)
-{
-  const formdata = new FormData();
-  formdata.append('mainformno' , mainformno);
-  formdata.append('detailformno' , detailformno);
-  axios.post(baseurl+'main/del_filetemp_edit' , formdata ,{
-      headers:{
-          'Content-Type':'multipart/form-data'
-      }
-  }).then(res=>{
-      console.log(res.data);
-      if(res.data.status == "success"){
-        myDropzone1_edit.removeAllFiles();
-        myDropzone2_edit.removeAllFiles();
-        myDropzone3_edit.removeAllFiles();
-        myDropzone4_edit.removeAllFiles();
-      }
-  });
-}
-
 
 
 

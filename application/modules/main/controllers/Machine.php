@@ -22,7 +22,8 @@ class Machine extends MX_Controller
         );
 
         //Check Permission page
-        if(getUser()->ecode == "M1413" || getUser()->ecode == "M2067" || getUser()->ecode == "M0089" || getUser()->ecode == "M1832"){
+        // M0040 = sompong nakarangsu ,  M0126 = sompong nakarangsu
+        if(getUser()->ecode == "M1413" || getUser()->ecode == "M2067" || getUser()->ecode == "M0089" || getUser()->ecode == "M1832" || getUser()->ecode == "0040" || getUser()->ecode == "M0126"){
             getHead();
             getContent("machine/index", $data);
             getFooter();

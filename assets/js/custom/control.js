@@ -28,8 +28,8 @@ let sessionEcode = $("#checkSessionEcode").val();
         $("#m_list").css("display", "none");
       }
 
-      if(sessionEcode == "M0089" || sessionEcode == "M1832"){
-        //สิทธิ์พี่ทีป
+      if(sessionEcode == "M0089" || sessionEcode == "M1832" || sessionEcode == "M0126"){
+        //สิทธิ์พี่ทีป M0126 = pansak , M0040 = sompong nakarangsu
         $("#m_list").css("display", "");
       }
     }
@@ -37,7 +37,12 @@ let sessionEcode = $("#checkSessionEcode").val();
     console.log("คุณคือพนักงานไอที");
     $("#m_list").css("display", "");
   } else {
-    console.log("คุณไม่ได้อยู่แผนก Production ครับ");
+    if(sessionEcode == "M0040"){
+      $("#m_list").css("display", "");
+      console.log("สวัสดีครับคุณสมพงษ์");
+    }else{
+      console.log("คุณไม่ได้อยู่แผนก Production ครับ");
+    }
   }
 
   let checkDeptCode = $("#checkDeptCode").val();
@@ -64,7 +69,12 @@ let sessionEcode = $("#checkSessionEcode").val();
   } else {
     if (checkDeptCode != "1002") {
       $(".topmenu").css("display", "none"); //ซ่อนปุ่ม เพิ่มรายการหลัก
-      $("#m_list").css("display", "none"); //ซ่อนเมนู Setting
+
+      if(sessionEcode == "M0040"){
+        $("#m_list").css("display", "");
+      }else{
+        $("#m_list").css("display", "none");
+      }
 
       if ($("#checkpage").val() == "viewmaindata.html") {
         $(".btnViewPage1").css("display", "none");
@@ -1058,40 +1068,77 @@ let sessionEcode = $("#checkSessionEcode").val();
           "&nbsp;&nbsp;<b>Shift : </b>" +
           data_shift
       );
-      deleteFileTemp(data_mainFormno);
+
+      console.log('FasubFormno : '+data_subFormno);
+
       loadTemplateRun(data_matchineTemp, data_subFormno , data_mainFormno);
-      // $(document).on("blur", "#rChooseTime", function () {
-        $("input[name='rChooseTime']").on("blur" , function(){
+    // $(document).on("blur", "#rChooseTime", function () {
+      $("input[name='rChooseTime']").on("blur" , function(){
 
-          checkSubmainTable(data_mainFormno);//ตรวจสอบว่ามีการสร้างกะงานกันหรือยังโดย Return data มาที่ input บน modal
+        checkSubmainTable(data_mainFormno);//ตรวจสอบว่ามีการสร้างกะงานกันหรือยังโดย Return data มาที่ input บน modal
 
-          let chooseTime = $(this).val();
-          let shiftResult = "";
+        let chooseTime = $(this).val();
+        let shiftResult = "";
 
-          if($('#returnCheckShift').val() == 0){
-            if(chooseTime >= "07:15" && chooseTime <= "19:14"){
-              shiftResult = "shift-a";
-            }else if(chooseTime >= "19:15" && chooseTime <= "23:59"){
-              shiftResult = "shift-c";
-            }else if(chooseTime >= "00:01" && chooseTime <= "07:14"){
-              shiftResult = "shift-c";
-            }
-
-            $('#fasub_worktime').val(shiftResult);
-          }else{
-            if(chooseTime >= "07:15" && chooseTime <= "19:14"){
-              shiftResult = "shift-a";
-            }else if(chooseTime >= "19:15" && chooseTime <= "23:59"){
-              shiftResult = "shift-c";
-            }else if(chooseTime >= "00:01" && chooseTime <= "07:14"){
-              shiftResult = "shift-c";
-            }
-
-            $('#fasub_worktime').val(shiftResult);
+        if($('#returnCheckShift').val() == 0){
+          if(chooseTime >= "07:15" && chooseTime <= "19:14"){
+            shiftResult = "shift-a";
+          }else if(chooseTime >= "19:15" && chooseTime <= "23:59"){
+            shiftResult = "shift-c";
+          }else if(chooseTime >= "00:01" && chooseTime <= "07:14"){
+            shiftResult = "shift-c";
           }
 
-        });
-        // Check เวลาให้สัมพันธ์กับกะงาน
+          $('#fasub_worktime').val(shiftResult);
+        }else{
+          if(chooseTime >= "07:15" && chooseTime <= "19:14"){
+            shiftResult = "shift-a";
+          }else if(chooseTime >= "19:15" && chooseTime <= "23:59"){
+            shiftResult = "shift-c";
+          }else if(chooseTime >= "00:01" && chooseTime <= "07:14"){
+            shiftResult = "shift-c";
+          }
+
+          $('#fasub_worktime').val(shiftResult);
+        }
+
+        
+  
+  
+        // let chooseTime = $(this).val();
+  
+        // const rsInput = conTimeInput(chooseTime);
+  
+        // const rsShiftAs = conTimeInput(shiftAs);
+        // const rsShiftAe = conTimeInput(shiftAe);
+        // const rsShiftBs = conTimeInput(shiftBs);
+        // const rsShiftBe = conTimeInput(shiftBe);
+        // const rsShiftCs = conTimeInput(shiftCs);
+        // const rsShiftCe = conTimeInput(shiftCe);
+  
+        // const checkMdShift = $("#checkMdShift").val();
+  
+        // if (checkMdShift == "shift-a") {
+        //   checkShiftTime(rsInput, rsShiftAs, rsShiftAe);
+        //   // console.log(rsInput+' '+rsShiftAs);
+        // }
+  
+        // if (checkMdShift == "shift-b") {
+        //   checkShiftTime(rsInput, rsShiftBs, rsShiftBe);
+        //   // console.log(rsInput+' '+rsShiftBs);
+        // }
+  
+        // if (checkMdShift == "shift-c") {
+        //   checkShiftTime2(rsInput, rsShiftCs, rsShiftCe);
+        //   // console.log(rsInput+' '+rsShiftCs);
+        // }
+  
+        // ///////////////////////////////////////
+        // /////// Check Duplicate Time
+        // //////////////////////////////////////
+        // checkDuplicateTime(data_subFormno, chooseTime);
+      });
+      // Check เวลาให้สัมพันธ์กับกะงาน
     });
 
 
@@ -1175,8 +1222,6 @@ let sessionEcode = $("#checkSessionEcode").val();
             console.log(data_fileAutoid);
           }
         });
-
-        deleteFileTemp_edit(farDetailMainFormno , fardetailFormno);
       });
 
 

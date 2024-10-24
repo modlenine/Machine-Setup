@@ -87,7 +87,6 @@
 
 		<script src="<?=base_url()?>assets/ekko_lightbox/ekko-lightbox.min.js"></script>
 
-
 		<!-- <script>
 			
 			// Example starter JavaScript for disabling form submissions if there are invalid fields

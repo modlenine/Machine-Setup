@@ -502,8 +502,9 @@ public function saveEditTemplateDetail()
 
 public function testcode()
 {
-    $uniqueFileName = bin2hex(random_bytes(16)) . '.txt';
-    echo $uniqueFileName;
+    $sqlFeeder = $this->db->query("SELECT fc_feederdeviation FROM msd_validate_feeder WHERE fc_mainformno = 'MS22001045' AND fc_feederid = '6532' ");
+
+    echo $sqlFeeder->num_rows();
 }
 
 public function loadQcSampling()
@@ -599,39 +600,9 @@ public function loadMachineList()
     $this->main->loadMachineList();
 }
 
-public function new_fileupload()
-{
-    uploadImage_new();
-}
-
-public function edit_fileupload()
-{
-    uploadImage_edit();
-}
-
-public function del_fileupload()
-{
-    del_fileupload();
-}
-
-public function getDetailFormno()
-{
-    $output = array(
-        "result" => getDetailFormNo()
-    );
-    echo json_encode($output);
-}
 
 
-public function del_filetemp()
-{
-    $this->main->del_filetemp();
-}
 
-public function del_filetemp_edit()
-{
-    $this->main->del_filetemp_edit();
-}
 
 
 

@@ -358,11 +358,17 @@
 <script>
     let testIDShowArray = [];
     let userPosi = "<?php echo getUser()->posi; ?>";
-    let baseurl = "<?php echo base_url(); ?>";
     $(document).ready(function() {
         if($(window).width() < 480){
             $('.conViewpage').removeClass('px-5');
         }
+
+        // console.log(userPosi);
+        // if(userPosi == "15"){
+        //     $('#btn_saveEditRunForm').css('display' , 'none');
+        // }else{
+        //     $('#btn_saveEditRunForm').css('display' , '');
+        // }
 
         let mainformno = $('#view_loadMainData').val();
         loadSubmainData2(mainformno);
@@ -612,62 +618,52 @@
 
         }
 
-        function getBomTemplateView(templatename , itemid , dataareaid , mainformno)
-        {
+    function getBomTemplateView(templatename , itemid , dataareaid , mainformno)
+    {
 
-            if(templatename != "" && itemid != "" && dataareaid != "" && mainformno != ""){
-                $.ajax({
-                    url:"/intsys/msd/main/machine/getBomTemplateView",
-                    method:"POST",
-                    data:{
-                        templatename:templatename,
-                        dataareaid:dataareaid,
-                        itemid:itemid,
-                        mainformno:mainformno
-                    },
-                    beforeSend:function(){},
-                    success:function(data){
-                        let res = JSON.parse(data);
-                        console.log(res);
-                        if(res.status == "Select Data Success"){
-                            let feederData = res.resultFeederTemplate;
-                            let bomData = res.resultBomTemplate;
-                            let bomMixedData = res.resultBomMixedTemplate;
+        if(templatename != "" && itemid != "" && dataareaid != "" && mainformno != ""){
+            $.ajax({
+                url:"/intsys/msd/main/machine/getBomTemplateView",
+                method:"POST",
+                data:{
+                    templatename:templatename,
+                    dataareaid:dataareaid,
+                    itemid:itemid,
+                    mainformno:mainformno
+                },
+                beforeSend:function(){},
+                success:function(data){
+                    let res = JSON.parse(data);
+                    console.log(res);
+                    if(res.status == "Select Data Success"){
+                        let feederData = res.resultFeederTemplate;
+                        let bomData = res.resultBomTemplate;
+                        let bomMixedData = res.resultBomMixedTemplate;
 
-                            let checkFeeder = res.checkFeeder;
-                            let checkBom = res.checkBom;
-                            let checkBomMixed = res.checkBomMixed;
-                            let feederTemplateSumValue = res.feederTemplateSumValue;
+                        let checkFeeder = res.checkFeeder;
+                        let checkBom = res.checkBom;
+                        let checkBomMixed = res.checkBomMixed;
+                        let feederTemplateSumValue = res.feederTemplateSumValue;
 
-                            if(checkFeeder == 0){
-                                $('#template_feeder').css('display' , 'none');
-                                $('#notify_oldData').css('display' , '');
-                            }else{
-                                $('#template_feeder').css('display' , '');
-                                $('#notify_oldData').css('display' , 'none');
-                            }
-                            $('#loadFeeder_template').html(feederData);
-                            $('#loadBom_template').html(bomData);
-                            $('#loadBomMixed_template').html(bomMixedData);
-
-                            console.log('checkFeeder : '+checkFeeder+' checkBom : '+checkBom+' checkBomMixed : '+checkBomMixed);
+                        if(checkFeeder == 0){
+                            $('#template_feeder').css('display' , 'none');
+                            $('#notify_oldData').css('display' , '');
+                        }else{
+                            $('#template_feeder').css('display' , '');
+                            $('#notify_oldData').css('display' , 'none');
                         }
-                    }
-                });
-            }
+                        $('#loadFeeder_template').html(feederData);
+                        $('#loadBom_template').html(bomData);
+                        $('#loadBomMixed_template').html(bomMixedData);
 
+                        console.log('checkFeeder : '+checkFeeder+' checkBom : '+checkBom+' checkBomMixed : '+checkBomMixed);
+                    }
+                }
+            });
         }
 
-        $(document).on('click' , '.closeAddRun' , function(){
-            let formno = "<?php echo $mainformno; ?>";
-            deleteFileTemp(formno);
-        });
+    }
 
-        $(document).on('click' , '.CloseEditRun' , function(){
-            let mainformno = $('#eMainFormno').val();
-            let detailformno = $('#eDetailFormno').val();
-            deleteFileTemp_edit(mainformno , detailformno);
-        });
         
 
     });
@@ -1456,381 +1452,6 @@
             console.log(batchnumber);
     }
 
-
-    Dropzone.autoDiscover = false;
-        
-        const myDropzone1 = new Dropzone("#fd_files1", {
-            url: baseurl+'main/new_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_type" , "อัพโหลดไฟล์รูปหน้าจอ");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone2 = new Dropzone("#fd_files2", {
-            url: baseurl+'main/new_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_type" , "อัพโหลดไฟล์รูปเม็ด MB.");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone3 = new Dropzone("#fd_files3", {
-            url: baseurl+'main/new_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_type" , "อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone4 = new Dropzone("#fd_files4", {
-            url: baseurl+'main/new_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_type" , "อัพโหลดไฟล์อื่นๆ");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone1_edit = new Dropzone("#fd_files1_edit", {
-            url: baseurl+'main/edit_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_detail_formno" , $('#eDetailFormno').val());
-                    formData.append("file_type" , "อัพโหลดไฟล์รูปหน้าจอ");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone2_edit = new Dropzone("#fd_files2_edit", {
-            url: baseurl+'main/edit_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_detail_formno" , $('#eDetailFormno').val());
-                    formData.append("file_type" , "อัพโหลดไฟล์รูปเม็ด MB.");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone3_edit = new Dropzone("#fd_files3_edit", {
-            url: baseurl+'main/edit_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_detail_formno" , $('#eDetailFormno').val());
-                    formData.append("file_type" , "อัพโหลดไฟล์รูปปัญหาในการผลิตและการทำงาน");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-
-        const myDropzone4_edit = new Dropzone("#fd_files4_edit", {
-            url: baseurl+'main/edit_fileupload',
-            paramName: "file",
-            maxFilesize: 4, // MB
-            acceptedFiles: "image/*,application/pdf", // กำหนดประเภทของไฟล์ที่สามารถอัพโหลดได้
-            addRemoveLinks: true,
-            dictRemoveFile: "Remove file", // เปลี่ยน label ของปุ่ม remove file
-            dictDefaultMessage: "ลากและวางไฟล์ที่นี่หรือคลิกเพื่อเลือกไฟล์",
-            init: function () {
-                this.on("sending", function (file, xhr, formData) {
-                    // ส่งพารามิเตอร์เพิ่มเติมไปด้วย
-                    formData.append("file_main_formno", "<?php echo $mainformno; ?>");
-                    formData.append("file_detail_formno" , $('#eDetailFormno').val());
-                    formData.append("file_type" , "อัพโหลดไฟล์อื่นๆ");
-                });
-                this.on("success", function (file, response) {
-                    file.serverFileName = JSON.parse(response).fileName;
-                    console.log(file.serverFileName);
-                });
-                this.on("error", function (file, errorMessage) {
-                    console.error(errorMessage);
-                });
-                this.on("removedfile" , function (file){
-                    if(file.serverFileName){
-                        //ส่งคำขอลบไฟล์ไปยังเซอร์เวอร์
-                        console.log("ลบไฟล์:", file.serverFileName); // log ชื่อไฟล์ก่อนส่งคำขอลบ
-                        fetch(baseurl+"main/del_fileupload" , {
-                            method:"POST",
-                            headers:{
-                                "Content-Type":"application/json"
-                            },
-                            body: JSON.stringify({ fileName: file.serverFileName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.status === "success"){
-                                console.log("ไฟล์ถูกลบสำเร็จ");
-                            }else{
-                                console.error("เกิดข้อผิดพลาดในการลบไฟล์ : "+data.message);
-                            }
-                        })
-                        .catch(error => console.error("เกิดข้อผิดพลาดในการลบไฟล์ : " , error));
-                    }
-                });
-            }
-        });
-        
 
 
 </script>
